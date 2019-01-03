@@ -22,7 +22,7 @@ public class ProductHolder implements IProductHolder {
 
 	private static Optional<ProductHolder> instance = Optional.empty();
 	
-	private Map<ProductKind, ProductStock> stock = new HashMap<ProductKind, ProductStock>();
+	private Map<ProductKind, ProductStock> stock = new HashMap<>();
 	
 	private ProductHolder() {
 		this.stock.put(ProductKind.COKE, new ProductStock(new Coke(), 0));
