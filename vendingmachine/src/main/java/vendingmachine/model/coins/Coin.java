@@ -11,5 +11,13 @@ public abstract class Coin {
 	public double getAmount() {
 		return amount;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Coin) {
+			return (this.amount == ((Coin) obj).amount);
+		}
+		return false;
+	}
 	
 }

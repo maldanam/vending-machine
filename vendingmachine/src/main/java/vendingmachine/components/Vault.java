@@ -20,7 +20,7 @@ public class Vault implements IVault {
 	private double amount;
 	
 	private Vault() {
-		this.coins = new ArrayList<Coin>();
+		this.coins = new ArrayList<>();
 	}
 	
 	public static IVault getInstance() {
