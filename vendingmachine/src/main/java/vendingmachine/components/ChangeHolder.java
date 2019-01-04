@@ -52,6 +52,7 @@ public class ChangeHolder implements IChangeHolder {
 		return instance.get();
 	}
 	
+	@Override
 	public List<Coin> get(double requestedAmount) throws InsufficientChangeException {
 		//Use BigDecimal for calculations to be more precise
 		BigDecimal bdRequestedAmount = new BigDecimal(requestedAmount, new MathContext(2));
@@ -87,6 +88,7 @@ public class ChangeHolder implements IChangeHolder {
 		return selectedCoins;
 	}
 
+	@Override
 	public void add(List<Coin> someCoins) {
 		for (Coin aCoin : someCoins) {
 			if (!this.acceptedCoins.contains(aCoin)) {
