@@ -58,4 +58,11 @@ public class ProductHolder implements IProductHolder {
 		productStock.increment(quantity);
 	}
 
+	@Override
+	public void empty() {
+		this.stock.get(ProductKind.COKE).empty();
+		this.stock.get(ProductKind.SPRITE).empty();
+		this.stock.get(ProductKind.WATER).empty();
+	}
+
 }

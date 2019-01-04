@@ -37,4 +37,8 @@ public class ProductStock {
 		this.quantity -= quantity;
 	}
 	
+	public void empty() {
+		this.quantity = 0;
+	}
+	
 }

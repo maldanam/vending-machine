@@ -1,6 +1,7 @@
 package vendingmachine.components;
 
 import static org.junit.Assert.assertTrue;
+
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import static vendingmachine.utils.AmountUtils.*;
 
 import vendingmachine.exceptions.InsufficientChangeException;
 import vendingmachine.model.coins.Coin;
@@ -91,11 +94,13 @@ public class ChangeHolderTests {
 				returnedAmount.compareTo(new BigDecimal(requestedAmount)) != 0);
 	}
 
-	private BigDecimal calculateAmount(List<Coin> someCoins) {
-		BigDecimal amount = BigDecimal.ZERO;
-		for (Coin coin : someCoins) {
-			amount = amount.add(new BigDecimal(coin.getAmount()));
-		}
-		return amount;
+	@Test
+	public void testLoadAndEmptyChange() throws InsufficientChangeException {
+		this.change.add(Arrays.asList(new FiftyCents(), new FiftyCents(), new TwentyCents(), new TwentyCents(), new TenCents()));		
+		assertTrue("The change has not been loaded correctly.", this.change.getAmount() == 1.50);
+
+		this.change.empty();
+		assertTrue("The change has not been emptied correctly.", this.change.getAmount() == 0);
 	}
+
 }

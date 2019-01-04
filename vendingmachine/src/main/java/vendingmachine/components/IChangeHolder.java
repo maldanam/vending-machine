@@ -17,6 +17,13 @@ public interface IChangeHolder {
 	 */
 	List<Coin> get(double amount) throws InsufficientChangeException;
 	
+	/**
+	 * Returns the total amount available for change return.
+	 * 
+	 * @return the current amount available
+	 */
+	double getAmount();
+	
 	/** 
 	 * Provide coins to be available for change return.
 	 * 

@@ -44,4 +44,9 @@ public interface IProductHolder {
 	 */
 	void add(ProductKind productKind, int quantity);
 	
+	/**
+	 * Removes all the products stock.
+	 */
+	void empty();
+	
 }

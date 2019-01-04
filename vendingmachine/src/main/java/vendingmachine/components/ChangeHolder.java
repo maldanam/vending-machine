@@ -89,6 +89,11 @@ public class ChangeHolder implements IChangeHolder {
 	}
 
 	@Override
+	public double getAmount() {
+		return this.total.doubleValue();
+	}
+
+	@Override
 	public void add(List<Coin> someCoins) {
 		for (Coin aCoin : someCoins) {
 			if (!this.acceptedCoins.contains(aCoin)) {

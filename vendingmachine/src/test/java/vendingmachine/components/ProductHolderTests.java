@@ -42,4 +42,13 @@ public class ProductHolderTests {
 		assertTrue("Product stock has been modified incorrectly.", stockBefore == stockAfter+1);
 	}
 
+	@Test
+	public void testIncreaseAndEmptyProductStock() {
+		this.holder.add(ProductKind.COKE, 10);
+		assertTrue("Product %s has been stored incorrectly.", this.holder.availableStock(ProductKind.COKE) == 10);
+		
+		this.holder.empty();;
+		assertTrue("Product %s has been emptied incorrectly.", this.holder.availableStock(ProductKind.COKE) == 0);
+	}
+
 }
