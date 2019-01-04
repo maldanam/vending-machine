@@ -1,5 +1,7 @@
 package vendingmachine.components;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,7 +33,7 @@ public class ChangeHolder implements IChangeHolder {
 													  new TwentyCents(),
 													  new TenCents(),
 													  new FiveCents());
-	private double total;
+	private BigDecimal total;
 	
 	private IVault vault;
 	
@@ -40,7 +42,7 @@ public class ChangeHolder implements IChangeHolder {
 		for (Coin aCoin : acceptedCoins) {
 			store.put(aCoin.getAmount(), new ArrayList<>());
 		}
-		this.total = 0;
+		this.total = BigDecimal.ZERO;
 	}
 	
 	public static IChangeHolder getInstance() {
@@ -51,19 +53,22 @@ public class ChangeHolder implements IChangeHolder {
 	}
 	
 	public List<Coin> get(double requestedAmount) throws InsufficientChangeException {
+		//Use BigDecimal for calculations to be more precise
+		BigDecimal bdRequestedAmount = new BigDecimal(requestedAmount, new MathContext(2));
 		
-		if (this.total < requestedAmount) {
+		if (this.total.compareTo(bdRequestedAmount) < 0) {
 			throw new InsufficientChangeException();
 		}
 				
-		double currentAmount = 0;
+		BigDecimal currentAmount = BigDecimal.ZERO;
 		List<Coin> selectedCoins = new ArrayList<>();
 		for (Coin anAcceptedCoin : this.acceptedCoins) {
-			if (currentAmount+anAcceptedCoin.getAmount() <= requestedAmount) {
+			BigDecimal bdAcceptedCoinAmount = new BigDecimal(anAcceptedCoin.getAmount(), new MathContext(2));
+			if (currentAmount.add(bdAcceptedCoinAmount).compareTo(bdRequestedAmount) <= 0) {
 				List<Coin> availableCoins = this.store.get(anAcceptedCoin.getAmount());
 				for (Coin anAvailableCoin : availableCoins) {
-					if (currentAmount+anAvailableCoin.getAmount() <= requestedAmount) {
-						currentAmount += anAvailableCoin.getAmount();
+					if (currentAmount.add(bdAcceptedCoinAmount).compareTo(bdRequestedAmount) <= 0) {
+						currentAmount = currentAmount.add(bdAcceptedCoinAmount);
 						selectedCoins.add(anAvailableCoin);
 					} else {
 						break;
@@ -72,8 +77,8 @@ public class ChangeHolder implements IChangeHolder {
 			}
 		}
 		
-		//We do not have enough coins to return the requested amount
-		if (requestedAmount-currentAmount >= 0.05) {			
+		if (currentAmount.compareTo(bdRequestedAmount) < 0) {			
+			//We do not have enough coins to return the requested amount
 			throw new InsufficientChangeException();
 		}
 		
@@ -89,7 +94,7 @@ public class ChangeHolder implements IChangeHolder {
 			} else {
 				List<Coin> coinStore = this.store.get(aCoin.getAmount());
 				coinStore.add(aCoin);
-				this.total += aCoin.getAmount();
+				this.total = this.total.add(new BigDecimal(aCoin.getAmount()));
 			}
 		}
 	}
@@ -99,13 +104,13 @@ public class ChangeHolder implements IChangeHolder {
 		for (List<Coin> coins : store.values()) {
 			coins.clear();
 		}
-		this.total = 0;
+		this.total = BigDecimal.ZERO;
 	}
 
 	private void remove(List<Coin> selectedCoins) {
 		for (Coin aCoin : selectedCoins) {
 			this.store.get(aCoin.getAmount()).remove(0);
-			this.total -= aCoin.getAmount();
+			this.total = this.total.subtract(new BigDecimal(aCoin.getAmount()));
 		}
 	}
 

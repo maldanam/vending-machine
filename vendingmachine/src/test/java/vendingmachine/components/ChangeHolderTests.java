@@ -3,6 +3,7 @@ package vendingmachine.components;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -69,25 +70,32 @@ public class ChangeHolderTests {
 	@Test
 	public void testGetChangeCorrectly() throws InsufficientChangeException {
 		this.change.add(Arrays.asList(new FiftyCents(), new FiftyCents(), new TwentyCents(), new TwentyCents(), new TenCents()));
+		
 		double requestedAmount = 0.80;
 		List<Coin> returnedChange = this.change.get(requestedAmount);
-		double returnedAmount = 0;
-		for (Coin coin : returnedChange) {
-			returnedAmount += coin.getAmount();
-		}
-		assertTrue("The returned change amount is different from the requested amount.", requestedAmount-returnedAmount < 0.05);
+		BigDecimal returnedAmount = calculateAmount(returnedChange);
+
+		assertTrue("The returned change amount is different from the requested amount.", 
+				returnedAmount.compareTo(new BigDecimal(requestedAmount)) != 0);
 	}
 
 	@Test
 	public void testGetAllChangeCorrectly() throws InsufficientChangeException {
 		this.change.add(Arrays.asList(new FiftyCents(), new FiftyCents(), new TwentyCents(), new TwentyCents(), new TenCents()));
+		
 		double requestedAmount = 1.50;
 		List<Coin> returnedChange = this.change.get(requestedAmount);
-		double returnedAmount = 0;
-		for (Coin coin : returnedChange) {
-			returnedAmount += coin.getAmount();
-		}
-		assertTrue("The returned change amount is different from the requested amount.", requestedAmount-returnedAmount < 0.05);
+		BigDecimal returnedAmount = calculateAmount(returnedChange);
+
+		assertTrue("The returned change amount is different from the requested amount.", 
+				returnedAmount.compareTo(new BigDecimal(requestedAmount)) != 0);
 	}
 
+	private BigDecimal calculateAmount(List<Coin> someCoins) {
+		BigDecimal amount = BigDecimal.ZERO;
+		for (Coin coin : someCoins) {
+			amount = amount.add(new BigDecimal(coin.getAmount()));
+		}
+		return amount;
+	}
 }
