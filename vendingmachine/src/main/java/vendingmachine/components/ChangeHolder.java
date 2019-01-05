@@ -55,15 +55,13 @@ public class ChangeHolder implements IChangeHolder {
 		List<Coin> selectedCoins = new ArrayList<>();
 		for (Coin anAcceptedCoin : this.acceptedCoins) {
 			BigDecimal bdAcceptedCoinAmount = new BigDecimal(anAcceptedCoin.getAmount(), new MathContext(2));
-			if (currentAmount.add(bdAcceptedCoinAmount).compareTo(bdRequestedAmount) <= 0) {
-				List<Coin> availableCoins = this.store.get(anAcceptedCoin.getAmount());
-				for (Coin anAvailableCoin : availableCoins) {
-					if (currentAmount.add(bdAcceptedCoinAmount).compareTo(bdRequestedAmount) <= 0) {
-						currentAmount = currentAmount.add(bdAcceptedCoinAmount);
-						selectedCoins.add(anAvailableCoin);
-					} else {
-						break;
-					}
+			List<Coin> availableCoins = this.store.get(anAcceptedCoin.getAmount());
+			for (Coin anAvailableCoin : availableCoins) {
+				if (currentAmount.add(bdAcceptedCoinAmount).compareTo(bdRequestedAmount) <= 0) {
+					currentAmount = currentAmount.add(bdAcceptedCoinAmount);
+					selectedCoins.add(anAvailableCoin);
+				} else {
+					break;
 				}
 			}
 		}
