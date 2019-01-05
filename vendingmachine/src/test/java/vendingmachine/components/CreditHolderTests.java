@@ -2,7 +2,7 @@ package vendingmachine.components;
 
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import vendingmachine.model.coins.FiftyCents;
@@ -14,36 +14,36 @@ import vendingmachine.model.coins.TwoEuro;
 
 public class CreditHolderTests {
 
-	private ICreditHolder credit;
+	private static ICreditHolder holder;
 	
-	@Before
-	public void setUp() throws Exception {
-		this.credit = CreditHolder.getInstance();
-		this.credit.empty();
+	@BeforeClass
+	public static void setUp() throws Exception {
+		holder = ComponentFactory.createCreditHolder();
+		holder.empty();
 	}
 
 	@Test
 	public void testStoresCreditCorrectly() {
-		this.credit.add(new TwoEuro());
-		this.credit.add(new OneEuro());
-		this.credit.add(new FiftyCents());
-		this.credit.add(new TwentyCents());
-		this.credit.add(new TenCents());
-		this.credit.add(new FiveCents());
+		holder.add(new TwoEuro());
+		holder.add(new OneEuro());
+		holder.add(new FiftyCents());
+		holder.add(new TwentyCents());
+		holder.add(new TenCents());
+		holder.add(new FiveCents());
 		
-		assertTrue("Credit has not been stored correctly.", this.credit.getAmount() == 3.85);
+		assertTrue("Credit has not been stored correctly.", holder.getAmount() == 3.85);
 	}
 
 	@Test
 	public void testEmptiesCreditCorrectly() {
-		this.credit.add(new TwoEuro());
-		this.credit.add(new OneEuro());
-		this.credit.add(new FiftyCents());
-		this.credit.add(new TwentyCents());
+		holder.add(new TwoEuro());
+		holder.add(new OneEuro());
+		holder.add(new FiftyCents());
+		holder.add(new TwentyCents());
 		
-		this.credit.empty();
+		holder.empty();
 		
-		assertTrue("Credit has not been stored correctly.", this.credit.getAmount() == 0);
+		assertTrue("Credit has not been stored correctly.", holder.getAmount() == 0);
 	}
 
 }

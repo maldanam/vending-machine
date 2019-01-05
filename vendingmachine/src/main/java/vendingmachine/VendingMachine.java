@@ -3,14 +3,11 @@ package vendingmachine;
 import java.util.List;
 import java.util.Optional;
 
-import vendingmachine.components.ChangeHolder;
-import vendingmachine.components.CreditHolder;
-import vendingmachine.components.Display;
+import vendingmachine.components.ComponentFactory;
 import vendingmachine.components.IChangeHolder;
 import vendingmachine.components.ICreditHolder;
 import vendingmachine.components.IDisplay;
 import vendingmachine.components.IProductHolder;
-import vendingmachine.components.ProductHolder;
 import vendingmachine.exceptions.InsufficientCreditException;
 import vendingmachine.exceptions.VendingMachineException;
 import vendingmachine.model.Product;
@@ -28,12 +25,16 @@ public class VendingMachine implements IVendingMachine {
 
 	private static Optional<VendingMachine> instance = Optional.empty();
 
-	private static IDisplay display = Display.getInstance();
-	private static ICreditHolder creditHolder = CreditHolder.getInstance();
-	private static IChangeHolder changeHolder = ChangeHolder.getInstance();
-	private static IProductHolder productHolder = ProductHolder.getInstance();
+	private IDisplay display;
+	private ICreditHolder creditHolder;
+	private IChangeHolder changeHolder;
+	private IProductHolder productHolder;
 	
 	private VendingMachine() {
+		this.display = ComponentFactory.createDisplay();
+		this.creditHolder = ComponentFactory.createCreditHolder();
+		this.changeHolder = ComponentFactory.createChangeHolder();
+		this.productHolder = ComponentFactory.createProductHolder();
 	}
 
 	public static IVendingMachine getInstance() {
@@ -58,6 +59,9 @@ public class VendingMachine implements IVendingMachine {
 		//Decrement a stock unit
 		Product unit = this.productHolder.sell(aProductKind);
 		
+		//Show product price on the display
+		this.display.showMessage(String.format("One unit of %s is %s euros", ProductKind.COKE, unit.getPrice()));
+
 		try {
 			
 			//Check there is enough credit to buy the product
@@ -99,7 +103,7 @@ public class VendingMachine implements IVendingMachine {
 	public void fill(List<Coin> someCoins) {
 
 		this.changeHolder.add(someCoins);
-		this.display.showMessage(String.format("%s euros loaded", this.changeHolder.getAmount()));
+		this.display.showMessage(String.format("%s euros of change loaded", this.changeHolder.getAmount()));
 	}
 
 	@Override

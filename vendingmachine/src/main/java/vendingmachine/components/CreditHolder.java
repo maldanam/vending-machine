@@ -4,26 +4,22 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import vendingmachine.model.coins.Coin;
 
+/**
+ * A CreditHolder implementation
+ * 
+ * @author marceloaldanamato
+ *
+ */
 public class CreditHolder implements ICreditHolder {
 
-	private static Optional<CreditHolder> instance = Optional.empty();
-	
 	private List<Coin> store = new ArrayList<>();
 	private BigDecimal total;
 
-	private CreditHolder() {
+	CreditHolder() {
 		this.total = BigDecimal.ZERO;
-	}
-	
-	public static ICreditHolder getInstance() {
-		if (!instance.isPresent()) {
-			instance = Optional.of(new CreditHolder());
-		}
-		return instance.get();
 	}
 	
 	@Override

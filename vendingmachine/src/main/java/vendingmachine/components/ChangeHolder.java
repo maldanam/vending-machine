@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import vendingmachine.exceptions.InsufficientChangeException;
 import vendingmachine.model.coins.Coin;
@@ -18,15 +17,13 @@ import vendingmachine.model.coins.TenCents;
 import vendingmachine.model.coins.TwentyCents;
 
 /**
- * Machine change holder implemented as a Singleton.
+ * Machine change holder implementation.
  * 
  * @author marceloaldanamato
  *
  */
 public class ChangeHolder implements IChangeHolder {
 
-	private static Optional<ChangeHolder> instance = Optional.empty();
-	
 	private Map<Double, List<Coin>> store = new HashMap<>();
 	private List<Coin> acceptedCoins = Arrays.asList(new OneEuro(), 
 													  new FiftyCents(), 
@@ -37,19 +34,12 @@ public class ChangeHolder implements IChangeHolder {
 	
 	private IVault vault;
 	
-	private ChangeHolder() {
-		this.vault = Vault.getInstance();
+	ChangeHolder(IVault aVault) {
+		this.vault = aVault;
 		for (Coin aCoin : acceptedCoins) {
 			store.put(aCoin.getAmount(), new ArrayList<>());
 		}
 		this.total = BigDecimal.ZERO;
-	}
-	
-	public static IChangeHolder getInstance() {
-		if (!instance.isPresent()) {
-			instance = Optional.of(new ChangeHolder());
-		}
-		return instance.get();
 	}
 	
 	@Override

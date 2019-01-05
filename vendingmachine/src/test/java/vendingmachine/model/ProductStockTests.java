@@ -1,47 +1,63 @@
 package vendingmachine.model;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import vendingmachine.exceptions.InsufficientStockException;
 
 public class ProductStockTests {
 
-	private ProductStock stock;
+	private static ProductStock stock;
 	
+	@BeforeClass
+	public static void setUp() throws Exception {
+		stock = new ProductStock(new Coke(), 0);
+	}
+
 	@Before
-	public void setUp() throws Exception {
-		this.stock = new ProductStock(new Coke(), 0);
+	public void reset() throws Exception {
+		stock.empty();;
 	}
 
 	@Test
 	public void testStockIncrement() {
-		this.stock.increment(1);
-		this.stock.increment(1);
-		this.stock.increment(4);
+		stock.increment(1);
+		stock.increment(1);
+		stock.increment(4);
 		
-		assertTrue("Stock has not been incremented correctly.", this.stock.getQuantity() == 6);
+		assertTrue("Stock has not been incremented correctly.", stock.getQuantity() == 6);
 	}
 
 	@Test
 	public void testStockDecrement() throws InsufficientStockException {
-		this.stock.increment(1);
-		this.stock.increment(1);
+		stock.increment(1);
+		stock.increment(1);
 		
-		this.stock.decrement(2);
+		stock.decrement(2);
 		
-		assertTrue("Stock has not been decremented correctly.", this.stock.getQuantity() == 0);
+		assertTrue("Stock has not been decremented correctly.", stock.getQuantity() == 0);
+	}
+	
+	@Test
+	public void testEmptyStock() throws InsufficientStockException {
+		stock.increment(1);
+		stock.increment(1);
+		
+		stock.empty();
+		
+		assertTrue("Stock has not been emptied correctly.", stock.getQuantity() == 0);
 	}
 	
 	@Test
 	public void testInsufficientStock() {
 		
 		try {
-			this.stock.decrement(1);
+			stock.decrement(1);
 		} catch (InsufficientStockException e) {
-			assertTrue("Stock has been decremented when it was insufficient.", this.stock.getQuantity() == 0);
+			assertTrue("Stock has been decremented when it was insufficient.", stock.getQuantity() == 0);
 		}
 	}	
 
